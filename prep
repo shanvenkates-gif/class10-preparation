@@ -1,0 +1,481 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Class 10 Board Exam Tracker</title>
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;background:#f3f5f8;color:#263b55;
+ font:15px/1.5 Arial,sans-serif
+}
+header{
+ background:#172b46;color:white;padding:25px 20px;
+ text-align:center
+}
+header h1{margin:8px;font-size:30px}
+header p{color:#d5e0ef}
+main{max-width:900px;margin:20px auto;padding:12px}
+.card{
+ background:white;border-radius:15px;
+ padding:17px;margin-bottom:13px;
+ box-shadow:0 3px 12px #172b4610
+}
+.stats{display:flex;justify-content:space-between}
+.big{font-size:28px;font-weight:bold}
+.muted{font-size:12px;color:#718096}
+.track{
+ height:8px;background:#e8edf2;
+ border-radius:20px;overflow:hidden;margin-top:9px
+}
+.fill{height:100%;background:#d7b76d;width:0}
+.grid{
+ display:grid;
+ grid-template-columns:repeat(auto-fit,minmax(245px,1fr));
+ gap:12px
+}
+.subject{
+ background:white;border:1px solid #e1e6ed;
+ border-radius:14px;padding:15px;
+ text-align:left;cursor:pointer;color:inherit;width:100%
+}
+.subject:hover{border-color:#8298b2}
+.top{display:flex;align-items:center;gap:12px}
+.ico{
+ width:42px;height:42px;border-radius:12px;
+ display:grid;place-items:center;color:white;font-size:20px
+}
+.name{font-weight:bold}
+.code{font-size:11px;background:#eef2f6;padding:3px 7px;border-radius:20px}
+.date{font-size:12px;color:#718096}
+.percent{margin-left:auto;font-weight:bold}
+.back{
+ border:0;background:none;color:#365879;
+ font-weight:bold;cursor:pointer;padding:10px 0
+}
+.panelhead{background:white;padding:17px;border-radius:15px}
+.tabs{display:flex;gap:7px;flex-wrap:wrap;margin:15px 0}
+.tab{
+ border:1px solid #ccd5e0;background:white;
+ border-radius:30px;padding:9px 13px;cursor:pointer
+}
+.tab.active{background:#172b46;color:white}
+.topic{padding:12px 0;border-bottom:1px solid #edf0f4}
+.topic label{display:flex;gap:10px;align-items:flex-start;cursor:pointer}
+.topic input{width:18px;height:18px;accent-color:#3975b9}
+.topic.done .topicname{
+ text-decoration:line-through;color:#8290a0
+}
+.revision{
+ justify-content:flex-end;margin-top:8px;
+ font-size:12px;color:#89749b
+}
+.revision input{width:14px;height:14px}
+.btn{
+ display:inline-block;background:#172b46;color:white;
+ padding:10px 14px;border-radius:9px;
+ text-decoration:none;font-size:13px;margin:5px 5px 5px 0
+}
+.btn.alt{background:white;color:#365879;border:1px solid #ccd5e0}
+.note{font-size:12px;color:#718096;line-height:1.5}
+footer{text-align:center;color:#8793a2;padding:20px;font-size:11px}
+@media(max-width:520px){
+ header h1{font-size:25px}
+ .grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+
+<body>
+<header>
+ <div>CBSE • BOARD EXAM 2027</div>
+ <h1>My Class 10 Journey</h1>
+ <p>Plan your portions. Track every chapter.</p>
+</header>
+
+<main>
+
+<section id="dashboard">
+ <div class="card">
+  <div class="stats">
+   <div><div class="big" id="overall">0%</div>
+   <div class="muted">Overall preparation</div></div>
+   <div style="text-align:right">
+   <div class="big" id="counts">0/0</div>
+   <div class="muted">Topics completed</div></div>
+  </div>
+  <div class="track"><div class="fill" id="overallbar"></div></div>
+ </div>
+
+ <h3>Examination Schedule</h3>
+ <div class="grid" id="subjects"></div>
+
+ <h3>CBSE Resources</h3>
+ <div class="card">
+  <b>Previous Year Question Papers</b>
+  <p class="muted">Official CBSE question paper archive</p>
+  <a class="btn"
+  href="https://www.cbse.gov.in/cbsenew/question-paper.html"
+  target="_blank">Open CBSE PYQ Page</a>
+  <a class="btn alt"
+  href="https://cbseacademic.nic.in/curriculum_2027.html"
+  target="_blank">2026-27 Syllabus</a>
+ </div>
+</section>
+
+<section id="detail" style="display:none">
+ <button class="back" id="back">← All Subjects</button>
+
+ <div class="panelhead">
+  <h2 id="subjecttitle"></h2>
+  <div class="muted" id="subjectmeta"></div>
+  <div class="stats">
+   <b id="subjectpercent">0%</b>
+   <span class="muted" id="subjectcount"></span>
+  </div>
+  <div class="track">
+   <div class="fill" id="subjectbar"></div>
+  </div>
+ </div>
+
+ <h3>Select Portion</h3>
+ <div class="tabs" id="tabs"></div>
+
+ <div class="card">
+  <h3 id="categorytitle"></h3>
+  <div class="muted">Tick the topic after completing it.</div>
+  <div id="topics"></div>
+ </div>
+
+ <a class="btn"
+ href="https://www.cbse.gov.in/cbsenew/question-paper.html"
+ target="_blank">Previous Year Questions</a>
+ <a class="btn alt"
+ href="https://cbseacademic.nic.in/curriculum_2027.html"
+ target="_blank">Official Syllabus</a>
+
+ <p class="note">
+ Progress is saved automatically in this browser.
+ </p>
+</section>
+
+<p class="note">
+Use the official CBSE 2026-27 curriculum and your school's final
+portion circular to verify the checklist.
+</p>
+</main>
+
+<footer>CLASS X • CBSE BOARD EXAM PREPARATION • 2027</footer>
+
+<script>
+
+const subjects = [
+
+{
+code:"041",name:"Mathematics",date:"17 February 2027",
+icon:"∑",color:"#3975b9",
+groups:[
+["Mathematics",[
+"Real Numbers","Polynomials",
+"Pair of Linear Equations in Two Variables",
+"Quadratic Equations","Arithmetic Progressions",
+"Coordinate Geometry","Triangles","Circles",
+"Introduction to Trigonometry",
+"Trigonometric Identities",
+"Applications of Trigonometry",
+"Areas Related to Circles",
+"Surface Areas and Volumes","Statistics","Probability"
+]]
+]},
+
+{
+code:"086",name:"Science",date:"22 February 2027",
+icon:"⚗",color:"#218b79",
+groups:[
+["Physics",[
+"Light – Reflection and Refraction",
+"The Human Eye and the Colourful World",
+"Electricity","Magnetic Effects of Electric Current"
+]],
+["Chemistry",[
+"Chemical Reactions and Equations",
+"Acids, Bases and Salts","Metals and Non-metals",
+"Carbon and its Compounds",
+"Periodic Classification of Elements"
+]],
+["Biology",[
+"Life Processes","Control and Coordination",
+"How do Organisms Reproduce?","Heredity"
+]],
+["Environment",["Our Environment"]]
+]},
+
+{
+code:"417",name:"Artificial Intelligence",date:"24 February 2027",
+icon:"✧",color:"#8c64b8",
+groups:[
+["Employability Skills",[
+"Communication Skills – II","Self-Management Skills – II",
+"ICT Skills – II","Entrepreneurial Skills – II",
+"Green Skills – II"
+]],
+["Subject-Specific Skills",[
+"Introduction to AI","AI Project Cycle","Advanced Python",
+"Data Science","Computer Vision",
+"Natural Language Processing","Evaluation"
+]]
+]},
+
+{
+code:"184",name:"English",date:"26 February 2027",
+icon:"Aa",color:"#c17d38",
+groups:[
+["First Flight – Prose",[
+"A Letter to God","Nelson Mandela – Long Walk to Freedom",
+"Two Stories About Flying","From the Diary of Anne Frank",
+"Glimpses of India","Mijbil the Otter",
+"Madam Rides the Bus","The Sermon at Benares",
+"The Proposal"
+]],
+["First Flight – Poems",[
+"Dust of Snow","Fire and Ice","A Tiger in the Zoo",
+"How to Tell Wild Animals","The Ball Poem","Amanda!",
+"The Trees","Fog","The Tale of Custard the Dragon",
+"For Anne Gregory"
+]],
+["Footprints Without Feet",[
+"A Triumph of Surgery","The Thief's Story",
+"The Midnight Visitor","A Question of Trust",
+"Footprints Without Feet","The Making of a Scientist",
+"The Necklace","Bholi","The Book That Saved the Earth"
+]],
+["Grammar and Writing",[
+"Determiners","Tenses","Modals","Subject–Verb Concord",
+"Reported Speech – Commands and Requests",
+"Reported Speech – Statements",
+"Reported Speech – Questions",
+"Formal Letter Writing","Analytical Paragraph Writing",
+"Unseen Reading Passages"
+]]
+]},
+
+{
+code:"119",name:"Sanskrit – मणिका",date:"1 March 2027",
+icon:"अ",color:"#b36b79",
+groups:[
+
+["पाठ्यपुस्तकम् – मणिका भाग २",[
+"पाठ १ – वाङ्मयं तपः",
+"पाठ २ – नास्ति त्यागसमं सुखम्",
+"पाठ ३ – रमणीया हि सृष्टिः एषा",
+"पाठ ४ – आज्ञा गुरूणां हि अविचारणीया",
+"पाठ ५ – अभ्यासवशगं मनः",
+"पाठ ६ – राष्ट्रं संरक्ष्यमेव हि",
+"पाठ ७ – साधुवृत्तिं समाचरेत्",
+"पाठ ८ – तिरुक्कुरल्-सूक्ति-सौरभम्",
+"पाठ ९ – सुस्वागतं भो! अरुणाचलेऽस्मिन्",
+"पाठ १० – कालोऽहम् (आन्तरिक मूल्यांकन)",
+"पाठ ११ – किं किम् उपादेयम् (आन्तरिक मूल्यांकन)"
+]],
+
+["व्याकरणम्",[
+"सन्धिः – स्वर, व्यञ्जन, विसर्ग",
+"समासः – तत्पुरुष, द्वन्द्व, अव्ययीभाव",
+"प्रत्ययाः – कृत्, तद्धित, स्त्री-प्रत्यय",
+"वाच्यपरिवर्तनम्","समयलेखनम्",
+"अव्ययपदानि","अशुद्धि-संशोधनम्"
+]],
+
+["रचनात्मककार्यम्",[
+"पत्रलेखनम्","चित्रवर्णनम्",
+"अनुच्छेदलेखनम्","संस्कृतभाषया वाक्यरचना / अनुवादः"
+]],
+
+["अपठित-अवबोधनम्",[
+"अपठितगद्यांशस्य पठनम्",
+"गद्यांशाधारित प्रश्नोत्तराणि",
+"शब्दार्थ / पर्याय / विलोम चयनम्",
+"शीर्षक-निर्धारणम्"
+]]
+]},
+
+{
+code:"087",name:"Social Science",date:"8 March 2027",
+icon:"◎",color:"#458a91",
+groups:[
+["History",[
+"The Rise of Nationalism in Europe",
+"Nationalism in India",
+"The Making of a Global World – prescribed board subtopics",
+"Print Culture and the Modern World",
+"The Age of Industrialisation – periodic assessment only"
+]],
+["Geography",[
+"Resources and Development",
+"Forest and Wildlife Resources","Water Resources",
+"Agriculture","Minerals and Energy Resources",
+"Manufacturing Industries",
+"Lifelines of National Economy – map pointing only"
+]],
+["Civics",[
+"Power-sharing","Federalism",
+"Gender, Religion and Caste",
+"Political Parties","Outcomes of Democracy"
+]],
+["Economics",[
+"Development","Sectors of the Indian Economy",
+"Money and Credit",
+"Globalisation and the Indian Economy",
+"Consumer Rights – project work"
+]]
+]}
+];
+
+// Progress storage
+let state={};
+try{
+ state=JSON.parse(localStorage.getItem("class10tracker2027")||"{}");
+}catch(e){}
+
+let current=0;
+let activeGroup=0;
+
+function key(s,g,i,t){
+ return `${s}-${g}-${i}-${t}`;
+}
+
+function save(){
+ localStorage.setItem("class10tracker2027",JSON.stringify(state));
+}
+
+function counts(s){
+ let total=0,done=0;
+ subjects[s].groups.forEach((g,gi)=>{
+  g[1].forEach((x,i)=>{
+   total++;
+   if(state[key(s,gi,i,"d")])done++;
+  });
+ });
+ return {total,done,pct:total?
+ Math.round(done/total*100):0};
+}
+
+function renderHome(){
+ let total=0,done=0;
+ subjects.forEach((s,i)=>{
+  let c=counts(i);
+  total+=c.total;
+  done+=c.done;
+ });
+ let p=Math.round(done/total*100);
+
+ document.getElementById("overall").textContent=p+"%";
+ document.getElementById("counts").textContent=done+"/"+total;
+ document.getElementById("overallbar").style.width=p+"%";
+
+ document.getElementById("subjects").innerHTML=
+ subjects.map((s,i)=>{
+  let c=counts(i);
+  return `
+  <button class="subject" data-sub="${i}">
+   <div class="top">
+    <div class="ico" style="background:${s.color}">${s.icon}</div>
+    <div>
+     <div class="name">${s.name}
+      <span class="code">${s.code}</span>
+     </div>
+     <div class="date">${s.date}</div>
+    </div>
+    <div class="percent">${c.pct}%</div>
+   </div>
+   <div class="track">
+    <div class="fill" style="width:${c.pct}%"></div>
+   </div>
+  </button>`;
+ }).join("");
+
+ document.querySelectorAll("[data-sub]").forEach(b=>{
+  b.onclick=()=>openSubject(+b.dataset.sub);
+ });
+}
+
+function openSubject(i){
+ current=i;
+ activeGroup=0;
+ document.getElementById("dashboard").style.display="none";
+ document.getElementById("detail").style.display="block";
+ renderDetail();
+ window.scrollTo(0,0);
+}
+
+function renderDetail(){
+ let s=subjects[current];
+ let c=counts(current);
+
+ document.getElementById("subjecttitle").textContent=s.name;
+ document.getElementById("subjectmeta").textContent=
+ `Subject code ${s.code} • Examination: ${s.date}`;
+ document.getElementById("subjectpercent").textContent=c.pct+"% complete";
+ document.getElementById("subjectcount").textContent=
+ `${c.done} of ${c.total} topics`;
+ document.getElementById("subjectbar").style.width=c.pct+"%";
+
+ document.getElementById("tabs").innerHTML=
+ s.groups.map((g,i)=>`
+ <button class="tab ${i===activeGroup?"active":""}"
+ data-g="${i}">${g[0]}</button>`).join("");
+
+ document.querySelectorAll("[data-g]").forEach(b=>{
+  b.onclick=()=>{
+   activeGroup=+b.dataset.g;
+   renderDetail();
+  };
+ });
+
+ let g=s.groups[activeGroup];
+ document.getElementById("categorytitle").textContent=g[0];
+
+ document.getElementById("topics").innerHTML=
+ g[1].map((n,i)=>{
+  let d=!!state[key(current,activeGroup,i,"d")];
+  let r=!!state[key(current,activeGroup,i,"r")];
+
+  return `
+  <div class="topic ${d?"done":""}">
+   <label>
+    <input type="checkbox" data-i="${i}" data-t="d"
+    ${d?"checked":""}>
+    <span class="topicname">${n}</span>
+   </label>
+   <label class="revision">
+    <input type="checkbox" data-i="${i}" data-t="r"
+    ${r?"checked":""}>
+    Revision completed
+   </label>
+  </div>`;
+ }).join("");
+
+ document.querySelectorAll("#topics input").forEach(el=>{
+  el.onchange=()=>{
+   state[key(current,activeGroup,+el.dataset.i,el.dataset.t)]
+   =el.checked;
+   save();
+   renderDetail();
+  };
+ });
+}
+
+document.getElementById("back").onclick=()=>{
+ document.getElementById("detail").style.display="none";
+ document.getElementById("dashboard").style.display="block";
+ renderHome();
+ window.scrollTo(0,0);
+};
+
+renderHome();
+
+</script>
+</body>
+</html>
